@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 
 class BrandController extends Controller
@@ -22,17 +22,14 @@ class BrandController extends Controller
         //
         $brands = Brand::all();
         $result = BrandResource::collection($brands);
-        $message = 'Brands retrieved successfully.';
-        $status = 200;
 
-        $response = [
-            'status'  => $status,
+        return response()->json([
+            'status'  => 200,
             'success' => true,
-            'message' => $message,
+            'message' => 'Brands retrieved successfully.',
             'data'    => $result,
-        ];
-
-        return response()->json($response, 200);
+        ]);
+        
     }
 
     /**
@@ -50,17 +47,14 @@ class BrandController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $message = 'Validation Error.';
-            $status = 400;
 
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 400,
                 'success' => false,
-                'message' => $message,
                 'data'    => $validator->errors(),
-            ];
+                'message' => 'Validation Error.',
+            ]);
 
-            return response()->json($response, 400);
         }
         else
         {
@@ -110,32 +104,22 @@ class BrandController extends Controller
 
         if (is_null($brand)) {
 
-            $status = 404;
-            $message = 'Brand not found.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 404,
                 'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+                'message' => 'Brand not found.'
+            ]);
 
         }
         else{
-            $status = 200;
+
             $result = new BrandResource($brand);
-            $message = 'Brand retrieved successfully.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'message' => $message,
+                'message' => 'Brand retrieved successfully.',
                 'data'    => $result,
-            ];
-
-
-            return response()->json($response, 200);
+            ]);
 
         }
     }
@@ -154,16 +138,11 @@ class BrandController extends Controller
 
         if (is_null($brand)) {
 
-            $status = 404;
-            $message = 'Brand not found.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 404,
                 'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+                'message' => 'Brand not found.'
+            ]);
 
         }
         else{
@@ -174,17 +153,13 @@ class BrandController extends Controller
             ]);
 
             if ($validator->fails()) {
-                $message = 'Validation Error.';
-                $status = 400;
 
-                $response = [
-                    'status'  => $status,
+                return response()->json([
+                    'status'  => 400,
                     'success' => false,
-                    'message' => $message,
                     'data'    => $validator->errors(),
-                ];
-
-                return response()->json($response, 400);
+                    'message' => 'Validation Error.',
+                ]);
             }
             else
             {
@@ -216,19 +191,15 @@ class BrandController extends Controller
                 $brand->logo = $filepath;
                 $brand->save();
                 
-
-                $status = 200;
                 $result = new BrandResource($brand);
-                $message = 'Brand updated successfully.';
 
-                $response = [
-                    'status'  => $status,
+                return response()->json([
+                    'status'  => 200,
                     'success' => true,
-                    'message' => $message,
+                    'message' => 'Brand updated successfully.',
                     'data'    => $result,
-                ];
+                ]);
 
-                return response()->json($response, 200);
             }
         }
     }
@@ -246,16 +217,11 @@ class BrandController extends Controller
 
         if (is_null($brand)) {
 
-            $status = 404;
-            $message = 'Brand not found.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 404,
                 'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+                'message' => 'Brand not found.'
+            ]);
         }
         else{
 
@@ -264,20 +230,14 @@ class BrandController extends Controller
             // if(\File::exists(public_path($oldphoto))){
             //     \File::delete(public_path($oldphoto));
             // }
+            $brand->delete(); 
 
-            $brand->delete();
-
-            $status = 200;
-            $message = 'Brand deleted successfully.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'message' => $message,
-            ];
-
-
-            return response()->json($response, 200);
+                'message' => 'Brand deleted successfully.',
+            ]);
+        
         }
     }
 }

@@ -18,14 +18,17 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
         if ($validator->fails()) {
+
             return response()->json([
                 'status' => 400,
                 'success' => false,
-                'data' => $validator->errors(),
-                'message' => 'Validation Error.'
+                'message' => 'Validation Error.',
+                'data' => $validator->errors()
             ]);
+
         }
         else{
+
             config(['auth.guards.admin-api.driver' => 'session']);
             if (Auth::guard('admin-api')->attempt([ 'phone' => request('phone'), 'password' => request('password') ])) {
                 // dd(Auth::guard('admin')->user());
@@ -40,13 +43,16 @@ class AuthController extends Controller
                     'data' => $admin,
                     'token' => $token
                 ]);
+
             }
             else{
+
                 return response()->json([
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
                 ]);
+            
             }
         }
     }
@@ -57,9 +63,11 @@ class AuthController extends Controller
         Auth::guard('admin-api')->user()->token()->revoke();
 
         Auth::guard('admin-api')->user()->token()->delete();
+
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    
     }
     //sale login and logout
     public function sale_login(Request $request)
@@ -70,14 +78,17 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()){
+
             return response()->json([
                 'status' => 400,
                 'success' => false,
-                'data' => $validator->errors(),
-                'massage' => 'Validation Error'
+                'massage' => 'Validation Error',
+                'data' => $validator->errors()
             ]);
+
         }
         else{
+            
             config(['auth.guards.sale-api.driver' => 'session']);
             if(Auth::guard('sale-api')->attempt([ 'phone' => request('phone'), 'password' => request('password') ])){
                 // dd(Auth::guard('sale-api')->user());
@@ -93,13 +104,16 @@ class AuthController extends Controller
                     'data' => $sale,
                     'token' => $token
                 ]);
+
             }
             else{
+
                 return response()->json([
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
                 ]);
+            
             }
         }
     }
@@ -111,6 +125,7 @@ class AuthController extends Controller
         Auth::guard('sale-api')->user()->token()->revoke();
 
         Auth::guard('sale-api')->user()->token()->delete();
+
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
@@ -126,14 +141,17 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
+
             return response()->json([
                 'status' => 400,
                 'success' => false,
-                'data' => $validator->errors(),
-                'message' => 'Validation Error.'
+                'message' => 'Validation Error.',
+                'data' => $validator->errors()
             ]);
+
         }
         else{
+
             if (Auth::attempt(['phone' => request('phone'), 'password' => request('password')])) {
                 $user = Auth::user();
                 $token = $user->createToken('App', ['user'])->accessToken;
@@ -146,13 +164,16 @@ class AuthController extends Controller
                     'data' => $user,
                     'token' => $token
                 ]);
+
             }
             else{
+
                 return response()->json([
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
                 ]);
+
             }
         }
     }
@@ -168,5 +189,6 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+        
     }
 }

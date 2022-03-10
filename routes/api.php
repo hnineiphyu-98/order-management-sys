@@ -29,19 +29,17 @@ use App\Http\Controllers\Api\SubcategoryController;
 // });
 
 Route::post('/admin/login', [AuthController::class, 'admin_login']);
-Route::post('/admin/logout', [AuthController::class, 'admin_logout'])->middleware('auth:admin-api');
+Route::post('/admin/logout', [AuthController::class, 'admin_logout'])->middleware('admin');
 
 Route::post('/sale/login', [AuthController::class, 'sale_login']);
-Route::post('/sale/logout', [AuthController::class, 'sale_logout'])->middleware('auth:sale-api');
+Route::post('/sale/logout', [AuthController::class, 'sale_logout'])->middleware('sale');
 
 Route::post('/user/login', [AuthController::class, 'user_login']);
 Route::post('/user/logout', [AuthController::class, 'user_logout'])->middleware('auth:api');
 
-Route::apiResource('/sales', SaleController::class)->middleware('auth:admin-api');
+Route::apiResource('/sales', SaleController::class)->middleware('admin');
 
-Route::group(['middleware' => 'admin', 'sale'], function(){
-    Route::apiResource('/users', UserController::class);
-   });
+Route::apiResource('/users', UserController::class)->middleware(['admin_or_sale']);
 
 Route::apiResource('/grades', GradeController::class);
 
@@ -54,3 +52,9 @@ Route::apiResource('/percentages', PercentageController::class);
 Route::post('/order', [OrderController::class, 'order']);
 Route::get('/order_lists', [OrderController::class, 'order_lists']);
 Route::get('/order_history', [OrderController::class, 'order_history']);
+
+
+//all user profile update
+//order confirm/cancel
+//in pending state order update
+//after order confirm, reduce instock related product

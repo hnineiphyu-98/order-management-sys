@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GradeResource;
 use App\Models\Grade;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class GradeController extends Controller
 {
@@ -18,6 +18,17 @@ class GradeController extends Controller
     public function index()
     {
         //
+        $grades = Grade::all();
+        $result = GradeResource::collection($grades);
+       
+
+        return response()->json([
+            'stasus'  => 200,
+            'success' => true,
+            'message' => 'Grades retrieved successfully.',
+            'data'    => $result
+        ]);
+
     }
 
     /**
@@ -30,21 +41,18 @@ class GradeController extends Controller
     {
         //
         $validator = Validator::make($request->all(),[
-            'level'  => 'required|string|max:255|unique:grades'
+            'level'  => 'required|string|unique:grades'
         ]);
 
         if ($validator->fails()) {
-            $status = 400;
-            $message = 'Validation Error.';
 
-            $response = [
-                'status'    =>  $status,
+            return response()->json([
+                'status'    =>  400,
                 'success'   =>  false,
-                'message'   =>  $message,
-                'data'      =>  $validator->errors(),
-            ];
+                'message'   =>  'Validation Error.',
+                'data'      =>  $validator->errors()
+            ]);
 
-            return response()->json($response, 400);
         }
         else{
             $grade_level = $request->level;
@@ -54,18 +62,15 @@ class GradeController extends Controller
             $grade->level = $grade_level;
             $grade->save(); 
 
-            $status = 200;
-            $message = 'Grade created successfully.';
             $result = new GradeResource($grade);
 
-            $response = [
+            return response()->json([
+                'status'    => 200,
                 'success'   => true,
-                'status'    => $status,
-                'message'   => $message,
+                'message'   => 'Grade created successfully.',
                 'data'      => $result,
-            ];
+            ]);       
 
-            return response()->json($response, 200);       
         }
     }
 
@@ -78,6 +83,28 @@ class GradeController extends Controller
     public function show($id)
     {
         //
+        $grade = Grade::find($id);
+
+        if (is_null($grade)) {
+
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Grade not found.'
+            ]);
+            
+        }else{
+            
+            $result = new GradeResource($grade);
+
+            return response()->json([
+                'status'    =>  200,
+                'success'   =>  true,
+                'message'   =>  'Grade retrieved successfully.',
+                'data'      =>  $result
+            ]);
+
+        }
     }
 
     /**
@@ -90,6 +117,53 @@ class GradeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $grade = Grade::find($id);
+
+        if (is_null($grade)) {
+
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Grade not found.'
+            ]);
+
+        }
+        else{
+
+            $validator = Validator::make($request->all(),[
+                'level'  => 'required|string|unique:grades'
+            ]);
+
+            if ($validator->fails()) {
+
+                return response()->json([
+                    'status'    =>  400,
+                    'success'   =>  false,
+                    'message'   =>  'Validation Error.',
+                    'data'      =>  $validator->errors()
+                ]);
+
+            }
+            else{
+
+                $level = $request->level;
+                
+                $grade = Grade::find($id);
+
+                $grade->level = $level;
+                $grade->save();
+
+                $result = new GradeResource($grade);
+
+                return response()->json([
+                    'status'    => 200,
+                    'success'   => true,
+                    'message'   => 'Grade updated successfully.',
+                    'data'      => $result
+                ]);
+
+            }
+        }
     }
 
     /**
@@ -101,5 +175,26 @@ class GradeController extends Controller
     public function destroy($id)
     {
         //
+        $grade = Grade::find($id);
+        if (is_null($grade)) {
+
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Grade not found.'
+            ]);
+
+        }
+        else{
+
+            $grade->delete();
+
+            return response()->json([
+                'status'    =>  200,
+                'success'   =>  true,
+                'message'   =>  'Grade deleted successfully.'
+            ]);
+
+        }
     }
 }

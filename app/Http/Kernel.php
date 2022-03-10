@@ -45,20 +45,6 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-
-        // 'admin-api' => [
-        //     \App\Http\Middleware\EncryptCookies::class,     
-        //     \Illuminate\Session\Middleware\StartSession::class,
-        //     'throttle:api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ],
-
-        // 'sale-api' => [
-        //     \App\Http\Middleware\EncryptCookies::class,     
-        //     \Illuminate\Session\Middleware\StartSession::class,
-        //     'throttle:api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ],
     ];
 
     /**
@@ -73,6 +59,7 @@ class Kernel extends HttpKernel
         'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
         'admin' => \App\Http\Middleware\admin::class, //Registering New Middleware
         'sale' => \App\Http\Middleware\sale::class, //Registering New Middleware
+        'admin_or_sale' => \App\Http\Middleware\admin_or_sale::class, //Registering New Middleware
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

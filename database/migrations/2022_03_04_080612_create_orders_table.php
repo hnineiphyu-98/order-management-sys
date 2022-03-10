@@ -18,6 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('voucher_no');
             $table->string('total');
             $table->string('status');
+            $table->boolean('read_at');
 
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

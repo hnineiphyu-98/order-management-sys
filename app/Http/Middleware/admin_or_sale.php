@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class sale
+class admin_or_sale
 {
     /**
      * Handle an incoming request.
@@ -17,12 +17,15 @@ class sale
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd(Auth::guard('sale-api')->user());
-        if ( Auth::guard('sale-api')->check() && Auth::guard('sale-api')->user()->token()->scopes[0] == "sale") {
-            // dd('sale');
+        // dd("admin or sale");
+        if ( Auth::guard('admin-api')->check() && Auth::guard('admin-api')->user()->token()->scopes[0] == "admin") {
+            // dd("admin");
             return $next($request);
-        } 
-            return response()->json(['message' => 'Unauthorized']);
+        } elseif ( Auth::guard('sale-api')->check() && Auth::guard('sale-api')->user()->token()->scopes[0] == "sale"){
+            // dd("sale");
+            return $next($request);
+        }
         
+        return response()->json(['message' => 'Unauthorized']);
     }
 }

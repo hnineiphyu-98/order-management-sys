@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Resources\CategoryResource;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -22,7 +22,13 @@ class CategoryController extends Controller
         $result = CategoryResource::collection($categories);
        
 
-        return response()->json($result, 200);
+        return response()->json([
+            'stasus'  => 200,
+            'success' => true,
+            'message' => 'Categories retrieved successfully.',
+            'data'    => $result
+        ]);
+
     }
 
     /**
@@ -39,19 +45,17 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $status = 400;
-            $message = 'Validation Error.';
 
-            $response = [
-                'status'    =>  $status,
+            return response()->json([
+                'status'    =>  400,
                 'success'   =>  false,
-                'message'   =>  $message,
+                'message'   =>  'Validation Error.',
                 'data'      =>  $validator->errors(),
-            ];
+            ]);
 
-            return response()->json($response, 400);
         }
         else{
+
             $name = $request->name;;
 
             // Data Insert
@@ -59,18 +63,15 @@ class CategoryController extends Controller
             $category->name = $name;
             $category->save(); 
 
-            $status = 200;
-            $message = 'Category created successfully.';
             $result = new CategoryResource($category);
 
-            $response = [
+            return response()->json([
+                'status'    => 200,
                 'success'   => true,
-                'status'    => $status,
-                'message'   => $message,
+                'message'   => 'Category created successfully.',
                 'data'      => $result,
-            ];
+            ]);
 
-            return response()->json($response, 200);       
         }
     }
 
@@ -86,31 +87,24 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (is_null($category)) {
-            # 404
-            $status = 404;
-            $message = 'Category not found.';
 
-            $response = [
-                'status'    => $status,
+            return response()->json([
+                'status'    => 404,
                 'success'   => false,
-                'message'   => $message
-            ];
-
-            return response()->json($response,404);
+                'message'   => 'Category not found.'
+            ]);
+            
         }else{
-            #200
-            $status = 200;
-            $message = 'Category retrieved successfully.';
+            
             $result = new CategoryResource($category);
 
-            $response = [
-                'status'    =>  $status,
+            return response()->json([
+                'status'    =>  200,
                 'success'   =>  true,
-                'message'   =>  $message,
+                'message'   =>  'Category retrieved successfully.',
                 'data'      =>  $result
-            ];
+            ]);
 
-            return response()->json($response, 200);
         }
     }
 
@@ -128,16 +122,11 @@ class CategoryController extends Controller
 
         if (is_null($category)) {
 
-            $status = 404;
-            $message = 'Category not found.';
-
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Category not found.'
+            ]);
 
         }
         else{
@@ -147,39 +136,33 @@ class CategoryController extends Controller
             ]);
 
             if ($validator->fails()) {
-                $status = 400;
-                $message = 'Validation Error.';
 
-                $response = [
-                    'status'    =>  $status,
+                return response()->json([
+                    'status'    =>  400,
                     'success'   =>  false,
-                    'message'   =>  $message,
-                    'data'      =>  $validator->errors(),
-                ];
+                    'message'   =>  'Validation Error.',
+                    'data'      =>  $validator->errors()
+                ]);
 
-                return response()->json($response, 400);
             }
             else{
+
                 $name = $request->name;
                 
                 $category = Category::find($id);
-                // Data update
-                
+
                 $category->name = $name;
                 $category->save();
 
-                $status = 200;
                 $result = new CategoryResource($category);
-                $message = 'Category updated successfully.';
 
-                $response = [
+                return response()->json([
+                    'status'    => 200,
                     'success'   => true,
-                    'status'    => $status,
-                    'message'   => $message,
+                    'message'   => 'Category updated successfully.',
                     'data'      => $result
-                ];
+                ]);
 
-                return response()->json($response, 200);
             }
         }
     }
@@ -196,31 +179,23 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (is_null($category)) {
 
-            $status = 404;
-            $message = 'Category not found.';
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Category not found.'
+            ]);
 
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
         }
         else{
 
             $category->delete();
 
-                $status = 200;
-                $message = 'Category deleted successfully.';
+            return response()->json([
+                'status'    =>  200,
+                'success'   =>  true,
+                'message'   =>  'Category deleted successfully.'
+            ]);
 
-                $response = [
-                    'success'   =>  true,
-                    'status'    =>  $status,
-                    'message'   =>  $message
-                ];
-
-                return response()->json($response, 200);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class admin
 {
@@ -16,6 +17,14 @@ class admin
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        
+        // dd(Auth::guard('admin-api')->user());
+        if ( Auth::guard('admin-api')->check() && Auth::guard('admin-api')->user()->token()->scopes[0] == "admin") {
+            // dd("admin");
+            return $next($request);
+        } 
+        return response()->json(['message' => 'Unauthorized']);
+        
+        
     }
 }

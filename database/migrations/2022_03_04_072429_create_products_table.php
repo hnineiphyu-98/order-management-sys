@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->double('price');
             $table->string('min_qty');
             $table->longText('description')->nullable();
+            $table->string('instock');
             $table->boolean('status');
 
             $table->bigInteger('subcategory_id')->unsigned();

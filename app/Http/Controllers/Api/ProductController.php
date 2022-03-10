@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -27,17 +27,13 @@ class ProductController extends Controller
         $products = Product::all();
         $result = ProductResource::collection($products);
 
-        $message = 'Products retrieved successfully.';
-        $status = 200;
+        return response()->json([
+            'status'  => 200,
+            'success' => true,
+            'message' => 'Products retrieved successfully.',
+            'data'    => $result
+        ]);
 
-        $response = [
-            'status'    =>  $status,
-            'success'   =>  true,
-            'message'   =>  $message,
-            'data'      =>  $result,
-        ];
-
-        return response()->json($response, 200);
     }
 
     /**
@@ -49,38 +45,36 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
-        
         $validator = Validator::make($request->all(), [ 
             'codeno' => 'required|string|max:255|unique:products',
             'name' => 'required|string|max:255',
             'photo' => 'required|mimes:jpeg,bmp,png,jpg',
             'price' =>'required|regex:/^\d+(\.\d{1,2})?$/',
             'min_qty' => 'required|string',
+            'instock' => 'required|string',
             'brand_id'       =>  'required',
             'subcategory_id' =>  'required',
         ]);
 
         if ($validator->fails()) {
-            $message = 'Validation Error.';
-            $status = 400;
-
-            $response = [
-                'status'  => $status,
+            
+            return response()->json([
+                'status' => 400,
                 'success' => false,
-                'message' => $message,
-                'data'    => $validator->errors(),
-            ];
+                'message' => 'Validation Error.',
+                'data' => $validator->errors()
+            ]);
 
-            return response()->json($response, 400);
         }
-        else
-        {
+        else{
+
             $codeno = $request->codeno;
             $name = $request->name;
             $photo = $request->photo;
             $description = $request->description;
             $price = $request->price;
             $min_qty = $request->min_qty;
+            $instock = $request->instock;
             $product_status = $request->status;
             $subcategory_id = $request->subcategory_id;
             $brand_id = $request->brand_id;
@@ -100,25 +94,22 @@ class ProductController extends Controller
             $product->description = $description;
             $product->price = $price;
             $product->min_qty = $min_qty;
+            $product->instock = $instock;
             $product->status = $product_status;
             $product->subcategory_id = $subcategory_id;
             $product->brand_id = $brand_id;
 
             $product->save();
             
-
-            $status = 200;
             $result = new ProductResource($product);
-            $message = 'Product created successfully.';
-
-            $response = [
-                'status'  => $status,
-                'success' => true,
-                'message' => $message,
-                'data'    => $result,
-            ];
-
-            return response()->json($response, 200);
+            
+            return response()->json([
+                'status'    => 200,
+                'success'   => true,
+                'message'   => 'Product created successfully.',
+                'data'      => $result
+            ]);   
+               
         }
     }
 
@@ -135,33 +126,23 @@ class ProductController extends Controller
 
         if (is_null($product)) {
 
-            $status = 404;
-            $message = 'Product not found.';
-
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Product not found.'
+            ]);
 
         }
         else{
-            $status = 200;
             $result = new ProductResource($product);
-            $message = 'Product retrieved successfully.';
-
-            $response = [
-                'status'  => $status,
-                'success' => true,
-                'message' => $message,
-                'data'    => $result,
-            ];
-
-
-            return response()->json($response, 200);
-
+            
+            return response()->json([
+                'status'    =>  200,
+                'success'   =>  true,
+                'message'   =>  'Product retrieved successfully.',
+                'data'      =>  $result
+            ]);
+        
         }
     }
 
@@ -179,18 +160,15 @@ class ProductController extends Controller
 
         if (is_null($product)) {
 
-            $status = 404;
-            $message = 'Product not found.';
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Product not found.'
+            ]);
 
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
         }
         else{
+
             $validator = Validator::make($request->all(), [ 
                 'codeno' => 'required|string|max:255',
                 'name' => 'required|string|max:255',
@@ -198,25 +176,22 @@ class ProductController extends Controller
                 'photo.*' => 'required|mimes:jpeg,bmp,png',
                 'price' =>'required|regex:/^\d+(\.\d{1,2})?$/',
                 'min_qty' => 'required|string',
+                'instock' => 'required|string',
                 'brand_id'       =>  'required',
                 'subcategory_id' =>  'required',
             ]);
 
             if ($validator->fails()) {
-                $message = 'Validation Error.';
-                $status = 400;
-
-                $response = [
-                    'status'  => $status,
+                
+                return response()->json([
+                    'status' => 400,
                     'success' => false,
-                    'message' => $message,
-                    'data'    => $validator->errors(),
-                ];
+                    'message' => 'Validation Error.',
+                    'data' => $validator->errors()
+                ]);
 
-                return response()->json($response, 400);
             }
-            else
-            {
+            else{
 
                 $codeno = $request->codeno;
                 $name = $request->name;
@@ -224,6 +199,7 @@ class ProductController extends Controller
                 $description = $request->description;
                 $price = $request->price;
                 $min_qty = $request->min_qty;
+                $instock = $request->instock;
                 $product_status = $request->status;
                 $subcategory_id = $request->subcategory_id;
                 $brand_id = $request->brand_id;
@@ -253,25 +229,22 @@ class ProductController extends Controller
                 $product->description = $description;
                 $product->price = $price;
                 $product->min_qty = $min_qty;
+                $product->instock = $instock;
                 $product->status = $product_status;
                 $product->subcategory_id = $subcategory_id;
                 $product->brand_id = $brand_id;
 
                 $product->save();
                 
-
-                $status = 200;
                 $result = new ProductResource($product);
-                $message = 'Product created successfully.';
-
-                $response = [
-                    'status'  => $status,
+                
+                return response()->json([
+                    'status'  => 200,
                     'success' => true,
-                    'message' => $message,
+                    'message' => 'Product updated successfully.',
                     'data'    => $result,
-                ];
+                ]);
 
-                return response()->json($response, 200);
             }
         }
     }
@@ -289,32 +262,23 @@ class ProductController extends Controller
 
         if (is_null($product)) {
 
-            $status = 404;
-            $message = 'Product not found.';
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Product not found.'
+            ]);
 
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
         }
         else{
 
             $product->delete();
 
-            $status = 200;
-            $message = 'Product deleted successfully.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'message' => $message,
-            ];
+                'message' => 'Product deleted successfully.',
+            ]);
 
-
-            return response()->json($response, 200);
         }
     }
 }

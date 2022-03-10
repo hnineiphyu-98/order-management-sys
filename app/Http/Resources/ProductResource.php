@@ -29,6 +29,7 @@ class ProductResource extends JsonResource
             'product_description' =>$this->description,
             'product_price' => $this->price,
             'product_min_qty' => $this->min_qty,
+            'product_instock' => $this->instock,
             'product_status' => $this->status,
             'subcategory_id' => $this->subcategory_id,
             'subcategory' => new SubcategoryResource(Subcategory::find($this->subcategory_id)),

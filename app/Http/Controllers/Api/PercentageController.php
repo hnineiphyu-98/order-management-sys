@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\PercentageResource;
 use App\Models\Percentage;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class PercentageController extends Controller
 {
@@ -20,17 +20,14 @@ class PercentageController extends Controller
         //
         $percentages = Percentage::all();
         $result = PercentageResource::collection($percentages);
-        $message = 'Percentages retrieved successfully.';
-        $status = 200;
 
-        $response = [
-            'status'  => $status,
+        return response()->json([
+            'status'  => 200,
             'success' => true,
-            'message' => $message,
-            'data'    => $result,
-        ];
+            'message' => 'Percentages retrieved successfully.',
+            'data'    => $result
+        ]);
 
-        return response()->json($response, 200);
     }
 
     /**
@@ -49,19 +46,17 @@ class PercentageController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $status = 400;
-            $message = 'Validation Error.';
+            
+            return response()->json([
+                'status' => 400,
+                'success' => false,
+                'message' => 'Validation Error.',
+                'data' => $validator->errors()
+            ]);
 
-            $response = [
-                'status'    =>  $status,
-                'success'   =>  false,
-                'message'   =>  $message,
-                'data'      =>  $validator->errors(),
-            ];
-
-            return response()->json($response, 400);
         }
         else{
+
             $percent = $request->percent;
             $product_id = $request->product_id;
             $grade_id = $request->grade_id;
@@ -73,18 +68,15 @@ class PercentageController extends Controller
             $percentage->grade_id = $grade_id;
             $percentage->save(); 
 
-            $status = 200;
-            $message = 'Percentage created successfully.';
             $result = new PercentageResource($percentage);
 
-            $response = [
+            return response()->json([
+                'status'    => 200,
                 'success'   => true,
-                'status'    => $status,
-                'message'   => $message,
-                'data'      => $result,
-            ];
-
-            return response()->json($response, 200);       
+                'message'   => 'Percentage created successfully.',
+                'data'      => $result
+            ]);   
+               
         }
     }
 
@@ -100,31 +92,24 @@ class PercentageController extends Controller
         $percentage = Percentage::find($id);
 
         if (is_null($percentage)) {
-            # 404
-            $status = 404;
-            $message = 'Percentage not found.';
 
-            $response = [
-                'status'    => $status,
+            return response()->json([
+                'status'    => 404,
                 'success'   => false,
-                'message'   => $message
-            ];
+                'message'   => 'Percentage not found.'
+            ]);
 
-            return response()->json($response,404);
         }else{
-            #200
-            $status = 200;
-            $message = 'Percentage retrieved successfully.';
+            
             $result = new PercentageResource($percentage);
 
-            $response = [
-                'status'    =>  $status,
+            return response()->json([
+                'status'    =>  200,
                 'success'   =>  true,
-                'message'   =>  $message,
+                'message'   =>  'Percentage retrieved successfully.',
                 'data'      =>  $result
-            ];
-
-            return response()->json($response, 200);
+            ]);
+        
         }
     }
 
@@ -142,16 +127,11 @@ class PercentageController extends Controller
 
         if (is_null($percentage)) {
 
-            $status = 404;
-            $message = 'Percentage not found.';
-
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Percentage not found.'
+            ]);
 
         }
         else{
@@ -163,19 +143,17 @@ class PercentageController extends Controller
             ]);
 
             if ($validator->fails()) {
-                $status = 400;
-                $message = 'Validation Error.';
+                
+                return response()->json([
+                    'status' => 400,
+                    'success' => false,
+                    'message' => 'Validation Error.',
+                    'data' => $validator->errors()
+                ]);
 
-                $response = [
-                    'status'    =>  $status,
-                    'success'   =>  false,
-                    'message'   =>  $message,
-                    'data'      =>  $validator->errors(),
-                ];
-
-                return response()->json($response,400);
             }
             else{
+
                 $percent = $request->percent;
                 $product_id = $request->product_id; 
                 $grade_id = $request->grade_id; 
@@ -187,18 +165,15 @@ class PercentageController extends Controller
                 $percentage->grade_id = $grade_id;
                 $percentage->save();
 
-                $status = 200;
                 $result = new PercentageResource($percentage);
-                $message = 'Percentage updated successfully.';
 
-                $response = [
-                    'status'  => $status,
+                return response()->json([
+                    'status'  => 200,
                     'success' => true,
-                    'message' => $message,
+                    'message' => 'Percentage updated successfully.',
                     'data'    => $result,
-                ];
+                ]);
 
-                return response()->json($response, 200);
             }
         }
     }
@@ -216,32 +191,23 @@ class PercentageController extends Controller
 
         if (is_null($percentage)) {
 
-            $status = 404;
-            $message = 'Percentage not found.';
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Percentage not found.'
+            ]);
 
-            $response = [
-                'status'  => $status,
-                'success' => false,
-                'message' => $message,
-            ];
-
-            return response()->json($response, 404);
         }
         else{
 
             $percentage->delete();
 
-            $status = 200;
-            $message = 'Percentage deleted successfully.';
-
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'message' => $message,
-            ];
+                'message' => 'Percentage deleted successfully.'
+            ]);
 
-
-            return response()->json($response, 200);
         }
     }
 }

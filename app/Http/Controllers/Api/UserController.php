@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EnduserResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Validator;
-use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,6 +17,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        // $this->middleware('admin');
+        // $this->middleware('sale')->only('index', 'show', 'store');
+    }
     public function index()
     {
         //
@@ -33,7 +36,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
-        // dd("Hello");
+        dd("Hello");
         $validator = Validator::make($request->all(), [
             'name' 		=> 'required',
             'phone'    	=> 'required',
@@ -45,19 +48,16 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            $message = 'Validation Error.';
-            $status = 400;
 
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 400,
                 'success' => false,
-                'data'    => $validator->errors(),
-                'message' => $message,
-            ];
-
-            return response()->json($response, 400);       
+                'message' => 'Validation Error.',
+                'data'    => $validator->errors()
+            ]);       
         }
         else{
+
             $name = $request->name;
             $email = $request->email;
             $phone = $request->phone;
@@ -69,6 +69,7 @@ class UserController extends Controller
             // dd(Auth::guard('admin-api')->check());
             $admin_id = null;
             $sale_id = null;
+            
             if (Auth::guard('admin-api')->check() && Auth::guard('admin-api')->user()->token()->scopes[0] == "admin") {
                 $admin_id = Auth::guard('admin-api')->user()->id;
                 // dd("admin");
@@ -89,20 +90,15 @@ class UserController extends Controller
                 'grade_id'  =>  $grade_id
             ]);
 
-
-            $message = 'User created successfully.';
-            $status = 200;
             $result = new UserResource($user);
 
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
                 'data'    => $result,
-                'message' => $message,
-            ];
+                'message' => 'User created successfully.',
+            ]);
 
-
-            return response()->json($response, 200);
         }
     }
 

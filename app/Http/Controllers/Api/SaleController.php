@@ -8,7 +8,7 @@ use App\Models\Sale;
 use App\Http\Resources\SaleResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class SaleController extends Controller
 {
@@ -40,19 +40,17 @@ class SaleController extends Controller
         ]);
 
         if($validator->fails()){
-            $message = 'Validation Error.';
-            $status = 400;
 
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status' => 400,
                 'success' => false,
-                'data'    => $validator->errors(),
-                'message' => $message,
-            ];
-
-            return response()->json($response, 400);       
+                'message' => 'Validation Error.',
+                'data' => $validator->errors()
+            ]);      
+        
         }
         else{
+
             $name = $request->name;
             $email = $request->email;
             $phone = $request->phone;
@@ -67,20 +65,15 @@ class SaleController extends Controller
                 'admin_id'  =>  $admin_id
             ]);
 
-
-            $message = 'Sale created successfully.';
-            $status = 200;
             $result = new SaleResource($sale);
-
-            $response = [
-                'status'  => $status,
+            
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'data'    => $result,
-                'message' => $message,
-            ];
+                'message' => 'Sale created successfully.',
+                'data'    => $result
+            ]);
 
-
-            return response()->json($response, 200);
         }
     }
 
