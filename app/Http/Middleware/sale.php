@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,11 +19,14 @@ class sale
     public function handle(Request $request, Closure $next)
     {
         // dd(Auth::guard('sale-api')->user());
+        if (! Auth::guard('sale-api')->user() || ! Auth::guard('sale-api')->user()->token()) {
+            throw new AuthenticationException();
+        }
         if ( Auth::guard('sale-api')->check() && Auth::guard('sale-api')->user()->token()->scopes[0] == "sale") {
             // dd('sale');
             return $next($request);
         } 
-            return response()->json(['message' => 'Unauthorized']);
+            return response()->json(['message' => 'Forbidden'], 403);
         
     }
 }

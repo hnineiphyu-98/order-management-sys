@@ -3,35 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Sale;
 use App\Http\Resources\SaleResource;
+use App\Models\Sale;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class SaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    //
+    public function sale_create(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        
+    
         $validator = Validator::make($request->all(), [
             'name' 		=> 'required',
             'phone'    	=> 'required|unique:sales',
@@ -46,7 +30,7 @@ class SaleController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data' => $validator->errors()
-            ]);      
+            ], 400);      
         
         }
         else{
@@ -70,44 +54,86 @@ class SaleController extends Controller
             return response()->json([
                 'status'  => 200,
                 'success' => true,
-                'message' => 'Sale created successfully.',
+                'message' => 'Sale user created successfully.',
                 'data'    => $result
-            ]);
+            ], 200);
 
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function sale_update(Request $request, $id)
     {
-        //
-    }
+        $sale = Sale::find($id);
+        // dd(Auth::guard('sale-api')->user()->id);
+        if (is_null($sale)) {
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'Sale user not found.'
+            ], 404);
+            
+        }else{
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            if ($id == Auth::guard('sale-api')->user()->id) {
+
+                $sale->update($request->all());
+                    
+                $result = new SaleResource($sale);
+                
+                return response()->json([
+                    'status'  => 200,
+                    'success' => true,
+                    'message' => 'Sale user updated successfully.',
+                    'data'    => $result
+                ], 200);
+                // $validator = Validator::make($request->all(), [
+                //     'name' 		=> 'required',
+                //     'phone'    	=> 'required|unique:sales',
+                //     'email' 	=> 'required|email|unique:sales',
+                //     'password' 	=> 'required',
+                // ]);
+        
+                // if($validator->fails()){
+        
+                //     return response()->json([
+                //         'status' => 400,
+                //         'success' => false,
+                //         'message' => 'Validation Error.',
+                //         'data' => $validator->errors()
+                //     ], 400);      
+                
+                // }
+                // else{
+        
+                //     $sale->name = $request->name;
+                //     $sale->email = $request->email;
+                //     $sale->phone = $request->phone;
+                //     $sale->password = $request->password;
+                //     $sale->admin_id = $sale->admin_id;
+                //     $sale->save();
+
+                //     $result = new SaleResource($sale);
+                    
+                //     return response()->json([
+                //         'status'  => 200,
+                //         'success' => true,
+                //         'message' => 'Sale user updated successfully.',
+                //         'data'    => $result
+                //     ], 200);
+                // }
+
+            }
+            else{
+
+                return response()->json([
+                    'status' => 403,
+                    'success' => false,
+                    'message' => 'Forbidden!'
+                ], 403);
+    
+            }
+
+        }
     }
 }

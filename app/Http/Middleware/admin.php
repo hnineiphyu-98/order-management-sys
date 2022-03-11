@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,11 +20,14 @@ class admin
     {
         
         // dd(Auth::guard('admin-api')->user());
+        if (! Auth::guard('admin-api')->user() || ! Auth::guard('admin-api')->user()->token()) {
+            throw new AuthenticationException();
+        }
         if ( Auth::guard('admin-api')->check() && Auth::guard('admin-api')->user()->token()->scopes[0] == "admin") {
             // dd("admin");
             return $next($request);
         } 
-        return response()->json(['message' => 'Unauthorized']);
+        return response()->json(['message' => 'Forbidden!'], 403);
         
         
     }

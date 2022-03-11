@@ -27,7 +27,7 @@ class GradeController extends Controller
             'success' => true,
             'message' => 'Grades retrieved successfully.',
             'data'    => $result
-        ]);
+        ], 200);
 
     }
 
@@ -51,7 +51,7 @@ class GradeController extends Controller
                 'success'   =>  false,
                 'message'   =>  'Validation Error.',
                 'data'      =>  $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -69,7 +69,7 @@ class GradeController extends Controller
                 'success'   => true,
                 'message'   => 'Grade created successfully.',
                 'data'      => $result,
-            ]);       
+            ], 200);       
 
         }
     }
@@ -91,7 +91,7 @@ class GradeController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Grade not found.'
-            ]);
+            ], 404);
             
         }else{
             
@@ -102,7 +102,7 @@ class GradeController extends Controller
                 'success'   =>  true,
                 'message'   =>  'Grade retrieved successfully.',
                 'data'      =>  $result
-            ]);
+            ], 200);
 
         }
     }
@@ -125,7 +125,7 @@ class GradeController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Grade not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -141,7 +141,7 @@ class GradeController extends Controller
                     'success'   =>  false,
                     'message'   =>  'Validation Error.',
                     'data'      =>  $validator->errors()
-                ]);
+                ], 400);
 
             }
             else{
@@ -160,7 +160,7 @@ class GradeController extends Controller
                     'success'   => true,
                     'message'   => 'Grade updated successfully.',
                     'data'      => $result
-                ]);
+                ], 200);
 
             }
         }
@@ -182,7 +182,7 @@ class GradeController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Grade not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -193,7 +193,7 @@ class GradeController extends Controller
                 'status'    =>  200,
                 'success'   =>  true,
                 'message'   =>  'Grade deleted successfully.'
-            ]);
+            ], 200);
 
         }
     }

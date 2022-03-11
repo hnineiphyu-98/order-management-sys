@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data' => $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -42,7 +42,7 @@ class AuthController extends Controller
                     'message' => 'Successful',
                     'data' => $admin,
                     'token' => $token
-                ]);
+                ], 200);
 
             }
             else{
@@ -51,7 +51,7 @@ class AuthController extends Controller
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
-                ]);
+                ], 401);
             
             }
         }
@@ -66,7 +66,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out'
-        ]);
+        ], 200);
     
     }
     //sale login and logout
@@ -84,7 +84,7 @@ class AuthController extends Controller
                 'success' => false,
                 'massage' => 'Validation Error',
                 'data' => $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -103,7 +103,7 @@ class AuthController extends Controller
                     'message' => 'Successfull',
                     'data' => $sale,
                     'token' => $token
-                ]);
+                ], 200);
 
             }
             else{
@@ -112,7 +112,7 @@ class AuthController extends Controller
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
-                ]);
+                ], 401);
             
             }
         }
@@ -128,7 +128,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out'
-        ]);
+        ], 200);
 
     }
 
@@ -147,7 +147,7 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data' => $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -163,7 +163,7 @@ class AuthController extends Controller
                     'message' => 'Successful',
                     'data' => $user,
                     'token' => $token
-                ]);
+                ], 200);
 
             }
             else{
@@ -172,7 +172,7 @@ class AuthController extends Controller
                     'status' => 401,
                     'success' => false,
                     'message' => 'Phone or Password Invalid!!'
-                ]);
+                ], 401);
 
             }
         }
@@ -188,7 +188,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out'
-        ]);
+        ], 200);
         
     }
 }

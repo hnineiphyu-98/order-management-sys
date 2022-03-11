@@ -20,7 +20,9 @@ class ProductResource extends JsonResource
     {
         // return parent::toArray($request);
         $baseurl = URL('/');
-
+        if ($this->status == 0) {
+            $this->status = "Out Of Stock!";
+        }
         return [
             'product_id' => $this->id,
             'product_code' => $this->code,
@@ -30,6 +32,7 @@ class ProductResource extends JsonResource
             'product_price' => $this->price,
             'product_min_qty' => $this->min_qty,
             'product_instock' => $this->instock,
+            'product_outstock' => $this->outstock,
             'product_status' => $this->status,
             'subcategory_id' => $this->subcategory_id,
             'subcategory' => new SubcategoryResource(Subcategory::find($this->subcategory_id)),

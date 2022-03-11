@@ -26,7 +26,7 @@ class PercentageController extends Controller
             'success' => true,
             'message' => 'Percentages retrieved successfully.',
             'data'    => $result
-        ]);
+        ], 200);
 
     }
 
@@ -52,7 +52,7 @@ class PercentageController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data' => $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -75,7 +75,7 @@ class PercentageController extends Controller
                 'success'   => true,
                 'message'   => 'Percentage created successfully.',
                 'data'      => $result
-            ]);   
+            ], 200);   
                
         }
     }
@@ -97,7 +97,7 @@ class PercentageController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Percentage not found.'
-            ]);
+            ], 404);
 
         }else{
             
@@ -108,7 +108,7 @@ class PercentageController extends Controller
                 'success'   =>  true,
                 'message'   =>  'Percentage retrieved successfully.',
                 'data'      =>  $result
-            ]);
+            ], 200);
         
         }
     }
@@ -131,7 +131,7 @@ class PercentageController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Percentage not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -149,7 +149,7 @@ class PercentageController extends Controller
                     'success' => false,
                     'message' => 'Validation Error.',
                     'data' => $validator->errors()
-                ]);
+                ], 400);
 
             }
             else{
@@ -172,7 +172,7 @@ class PercentageController extends Controller
                     'success' => true,
                     'message' => 'Percentage updated successfully.',
                     'data'    => $result,
-                ]);
+                ], 200);
 
             }
         }
@@ -195,7 +195,7 @@ class PercentageController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Percentage not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -206,7 +206,7 @@ class PercentageController extends Controller
                 'status'  => 200,
                 'success' => true,
                 'message' => 'Percentage deleted successfully.'
-            ]);
+            ], 200);
 
         }
     }

@@ -27,7 +27,7 @@ class CategoryController extends Controller
             'success' => true,
             'message' => 'Categories retrieved successfully.',
             'data'    => $result
-        ]);
+        ], 200);
 
     }
 
@@ -51,7 +51,7 @@ class CategoryController extends Controller
                 'success'   =>  false,
                 'message'   =>  'Validation Error.',
                 'data'      =>  $validator->errors(),
-            ]);
+            ], 400);
 
         }
         else{
@@ -70,7 +70,7 @@ class CategoryController extends Controller
                 'success'   => true,
                 'message'   => 'Category created successfully.',
                 'data'      => $result,
-            ]);
+            ], 200);
 
         }
     }
@@ -92,7 +92,7 @@ class CategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Category not found.'
-            ]);
+            ], 404);
             
         }else{
             
@@ -103,7 +103,7 @@ class CategoryController extends Controller
                 'success'   =>  true,
                 'message'   =>  'Category retrieved successfully.',
                 'data'      =>  $result
-            ]);
+            ], 200);
 
         }
     }
@@ -126,7 +126,7 @@ class CategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Category not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -142,7 +142,7 @@ class CategoryController extends Controller
                     'success'   =>  false,
                     'message'   =>  'Validation Error.',
                     'data'      =>  $validator->errors()
-                ]);
+                ], 400);
 
             }
             else{
@@ -161,7 +161,7 @@ class CategoryController extends Controller
                     'success'   => true,
                     'message'   => 'Category updated successfully.',
                     'data'      => $result
-                ]);
+                ], 200);
 
             }
         }
@@ -183,7 +183,7 @@ class CategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Category not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -194,7 +194,7 @@ class CategoryController extends Controller
                 'status'    =>  200,
                 'success'   =>  true,
                 'message'   =>  'Category deleted successfully.'
-            ]);
+            ], 200);
 
         }
     }

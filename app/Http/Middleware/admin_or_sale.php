@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,9 @@ class admin_or_sale
     public function handle(Request $request, Closure $next)
     {
         // dd("admin or sale");
+        if (! Auth::guard('admin-api')->user() || ! Auth::guard('admin-api')->user()->token()) {
+            throw new AuthenticationException();
+        }
         if ( Auth::guard('admin-api')->check() && Auth::guard('admin-api')->user()->token()->scopes[0] == "admin") {
             // dd("admin");
             return $next($request);
@@ -26,6 +30,6 @@ class admin_or_sale
             return $next($request);
         }
         
-        return response()->json(['message' => 'Unauthorized']);
+        return response()->json(['message' => 'Forbidden!'], 403);
     }
 }

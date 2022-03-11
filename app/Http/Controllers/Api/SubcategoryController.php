@@ -26,7 +26,7 @@ class SubcategoryController extends Controller
             'success' => true,
             'message' => 'Subcategories retrieved successfully.',
             'data'    => $result
-        ]);
+        ], 200);
 
     }
 
@@ -51,7 +51,7 @@ class SubcategoryController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data' => $validator->errors()
-            ]);
+            ], 400);
 
         }
         else{
@@ -71,7 +71,7 @@ class SubcategoryController extends Controller
                 'success'   => true,
                 'message'   => 'Subcatogory created successfully.',
                 'data'      => $result
-            ]);   
+            ], 200);   
               
         }
     }
@@ -93,7 +93,7 @@ class SubcategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Subcategory not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -105,7 +105,7 @@ class SubcategoryController extends Controller
                 'success'   =>  true,
                 'message'   =>  'Subcategory retrieved successfully.',
                 'data'      =>  $result
-            ]);
+            ], 200);
         
         }
     }
@@ -128,7 +128,7 @@ class SubcategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Subcategory not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -145,7 +145,7 @@ class SubcategoryController extends Controller
                     'success' => false,
                     'message' => 'Validation Error.',
                     'data' => $validator->errors()
-                ]);
+                ], 400);
 
             }
             else{
@@ -166,7 +166,7 @@ class SubcategoryController extends Controller
                     'success'   => true,
                     'message'   => 'Subcatogory updated successfully.',
                     'data'      => $result
-                ]);   
+                ], 200);   
                 
             }
         }
@@ -188,7 +188,7 @@ class SubcategoryController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Subcategory not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -199,7 +199,7 @@ class SubcategoryController extends Controller
                 'status'    =>  200,
                 'success'   =>  true,
                 'message'   =>  'Category deleted successfully.'
-            ]);
+            ], 200);
 
         }
     }

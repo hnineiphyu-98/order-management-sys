@@ -12,31 +12,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function __construct()
+    //
+    public function user_create(Request $request)
     {
-        // $this->middleware('admin');
-        // $this->middleware('sale')->only('index', 'show', 'store');
-    }
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        dd("Hello");
+        // dd("Hello");
         $validator = Validator::make($request->all(), [
             'name' 		=> 'required',
             'phone'    	=> 'required',
@@ -54,7 +33,7 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'Validation Error.',
                 'data'    => $validator->errors()
-            ]);       
+            ], 400);       
         }
         else{
 
@@ -97,42 +76,49 @@ class UserController extends Controller
                 'success' => true,
                 'data'    => $result,
                 'message' => 'User created successfully.',
-            ]);
+            ], 200);
 
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function user_update(Request $request, $id)
     {
-        //
-    }
+        $user = User::find($id);
+        if (is_null($user)) {
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+            return response()->json([
+                'status'    => 404,
+                'success'   => false,
+                'message'   => 'User not found.'
+            ], 404);
+            
+        }else{
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            if ($id == Auth::guard('api')->user()->id) {
+
+                $user->update($request->all());
+                    
+                $result = new UserResource($user);
+                
+                return response()->json([
+                    'status'  => 200,
+                    'success' => true,
+                    'message' => 'User updated successfully.',
+                    'data'    => $result
+                ], 200);
+
+            }
+            else{
+
+                return response()->json([
+                    'status' => 403,
+                    'success' => false,
+                    'message' => 'Forbidden!'
+                ], 403);
+    
+            }
+
+        }
     }
+    
 }

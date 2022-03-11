@@ -15,12 +15,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('role:admin');
-    //     $this->middleware('role:admin');
-    //     $this->middleware('subscribed')->except('store');
-    // }
+
+     public function __construct()
+     {
+         $this->middleware('auth:api')->only(['index', 'show']);
+     }
+    
     public function index()
     {
         //

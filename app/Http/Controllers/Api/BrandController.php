@@ -28,7 +28,7 @@ class BrandController extends Controller
             'success' => true,
             'message' => 'Brands retrieved successfully.',
             'data'    => $result,
-        ]);
+        ], 200);
         
     }
 
@@ -53,7 +53,7 @@ class BrandController extends Controller
                 'success' => false,
                 'data'    => $validator->errors(),
                 'message' => 'Validation Error.',
-            ]);
+            ], 400);
 
         }
         else
@@ -75,19 +75,15 @@ class BrandController extends Controller
 
             $brand->save();
             
-
-            $status = 200;
             $result = new BrandResource($brand);
-            $message = 'Brand created successfully.';
 
-            $response = [
-                'status'  => $status,
+            return response()->json([
+                'status'  => 200,
                 'success' => true,
-                'message' => $message,
+                'message' => 'Brand created successfully.',
                 'data'    => $result,
-            ];
+            ], 200);
 
-            return response()->json($response, 200);
         }
     }
 
@@ -108,7 +104,7 @@ class BrandController extends Controller
                 'status'  => 404,
                 'success' => false,
                 'message' => 'Brand not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -119,7 +115,7 @@ class BrandController extends Controller
                 'success' => true,
                 'message' => 'Brand retrieved successfully.',
                 'data'    => $result,
-            ]);
+            ], 200);
 
         }
     }
@@ -142,7 +138,7 @@ class BrandController extends Controller
                 'status'  => 404,
                 'success' => false,
                 'message' => 'Brand not found.'
-            ]);
+            ], 404);
 
         }
         else{
@@ -159,7 +155,7 @@ class BrandController extends Controller
                     'success' => false,
                     'data'    => $validator->errors(),
                     'message' => 'Validation Error.',
-                ]);
+                ], 400);
             }
             else
             {
@@ -198,7 +194,7 @@ class BrandController extends Controller
                     'success' => true,
                     'message' => 'Brand updated successfully.',
                     'data'    => $result,
-                ]);
+                ], 200);
 
             }
         }
@@ -221,7 +217,7 @@ class BrandController extends Controller
                 'status'  => 404,
                 'success' => false,
                 'message' => 'Brand not found.'
-            ]);
+            ], 404);
         }
         else{
 
@@ -236,7 +232,7 @@ class BrandController extends Controller
                 'status'  => 200,
                 'success' => true,
                 'message' => 'Brand deleted successfully.',
-            ]);
+            ], 200);
         
         }
     }
